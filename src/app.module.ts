@@ -3,13 +3,27 @@ import {AppController} from './app.controller';
 import {MongooseModule} from "@nestjs/mongoose";
 import {UserModule} from './user/user.module';
 import {AuthModule} from './auth/auth.module';
-import {UserService} from "./user/user.service";
-import {AuthService} from "./auth/auth.service";
+import {ConfigModule} from "@nestjs/config";
 
 @Module({
-    imports: [MongooseModule.forRoot('mongodb://localhost/nest'), UserModule, AuthModule],
+    imports: [
+        ConfigModule.forRoot({
+            envFilePath: ".env",
+            isGlobal: true
+        }),
+        MongooseModule.forRoot(
+            'mongodb://localhost:27017/testDB',
+            {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+                user: 'root',
+                pass: '123456'
+            }
+        ),
+        UserModule,
+        AuthModule,
+    ],
     controllers: [AppController],
-    providers: [UserService, AuthService],
 })
 export class AppModule {
 }
